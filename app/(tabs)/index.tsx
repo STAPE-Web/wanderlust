@@ -1,70 +1,75 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import CardDefault from '@/components/Cards/Default';
+import CardSmall from '@/components/Cards/Small';
+import { placesList } from '@/constants';
+import { BellIcon } from '@/ui/Icons';
+import { useRouter } from 'expo-router';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+export default function Home() {
+  const router = useRouter()
 
-export default function HomeScreen() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <ScrollView style={styles.Page}>
+      <View style={styles.Header}>
+        <Text style={styles.Title}>Ciao Nikita</Text>
+
+        <TouchableOpacity activeOpacity={0.7} onPress={() => router.push("/notifications")} style={styles.Notification}>
+          <BellIcon color='#0D387A' />
+        </TouchableOpacity>
+      </View>
+
+      <ScrollView style={styles.Scroll} horizontal showsHorizontalScrollIndicator={false}>
+        {placesList.slice(0, 10).map((item, index) => (
+          <View key={item.id} style={index === placesList.slice(0, 10).length - 1 ? styles.LastCard : styles.CardContainer}>
+            <CardSmall item={item} />
+          </View>
+        ))}
+      </ScrollView>
+
+      <View style={styles.CardList}>
+        {placesList.slice(10, 20).map((item) => (
+          <CardDefault item={item} key={item.id} />
+        ))}
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  Page: {
+    flex: 1,
+    backgroundColor: "#fff",
+    padding: 15,
+    paddingTop: 40
+  },
+  Notification: {
+    width: 34,
+    height: 34
+  },
+  Header: {
+    flex: 1,
+    justifyContent: "space-between",
     alignItems: 'center',
-    gap: 8,
+    flexDirection: "row"
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  Title: {
+    color: "#0D387A",
+    fontSize: 32,
+    fontFamily: "semibold"
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  Scroll: {
+    marginTop: 40,
+    paddingRight: 15,
   },
+  CardContainer: {
+    marginRight: 15,
+  },
+  LastCard: {
+    marginRight: 15,
+  },
+  CardList: {
+    marginTop: 30,
+    gap: 15,
+    paddingBottom: 70
+  }
 });
